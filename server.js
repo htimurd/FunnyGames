@@ -106,6 +106,8 @@ function pubGame(g, u, isAdmin) {
 const app = express();
 app.use(express.json({ limit: '700kb' }));
 app.get('/', (_, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/logo.png', (_, res) => res.sendFile(path.join(__dirname, 'logo.png')));
+app.get('/logo.svg', (_, res) => res.type('image/svg+xml').sendFile(path.join(__dirname, 'logo.svg')));
 app.get('/health', (_, res) => res.send('ok'));
 app.get('/api/config', (_, res) => res.json({ bot: BOT_USERNAME }));
 
@@ -217,4 +219,3 @@ app.post('/api/admin/verify', needAdmin, (req, res) => {
 
 load().then(() => app.listen(PORT, () => console.log('FunnyGames на порту ' + PORT)))
   .catch(e => { console.error('Не удалось запустить:', e.message); process.exit(1); });
-      
