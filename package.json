@@ -1,0 +1,9 @@
+{
+  "name": "funnygames",
+  "version": "1.0.0",
+  "description": "FunnyGames — магазин бесплатных HTML-игр (Telegram Mini App)",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" },
+  "dependencies": { "express": "^4.19.2", "pg": "^8.12.0" }
+}
