@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>FunnyGames</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--bg:#f1edff;--card:#fff;--ink:#1a1033;--mute:#6c6488;--pur:#6b3fe0;--yel:#ffcf33;--pink:#ff5fa2;--blue:#1d9bf0;--edge:#1a1033;--ok:#1f9d63;--no:#d93a4a}
+@media (prefers-color-scheme:dark){:root{--bg:#170f2e;--card:#251a45;--ink:#f3eeff;--mute:#a89fc7;--edge:#000}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif}
+body{padding:0 14px calc(88px + env(safe-area-inset-bottom));padding-top:calc(8px + env(safe-area-inset-top))}
+.logo{font-size:28px;font-weight:900;letter-spacing:-.5px;margin:6px 0 2px}.logo i{font-style:normal;background:var(--yel);padding:0 8px;border:2px solid var(--edge);border-radius:10px;box-shadow:3px 3px 0 var(--edge);margin-right:4px;display:inline-block;transform:rotate(-3deg)}
+h2{font-size:19px;margin:16px 0 8px}h3{margin:0 0 6px;font-size:16px}
+.muted{color:var(--mute);font-size:13px}
+.box,.gc,input,textarea{background:var(--card);border:2px solid var(--edge);border-radius:14px;color:var(--ink)}
+.box{padding:14px;margin:12px 0;box-shadow:3px 3px 0 var(--edge)}
+input,textarea{width:100%;font:inherit;padding:11px 12px;margin:4px 0 8px}textarea{min-height:110px;font-family:ui-monospace,monospace;font-size:12px}
+input:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid var(--pur);outline-offset:1px}
+button{font:inherit;font-weight:800;border:2px solid var(--edge);border-radius:12px;padding:10px 14px;background:var(--pur);color:#fff;box-shadow:2px 2px 0 var(--edge);cursor:pointer}
+button:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--edge)}
+button.y{background:var(--yel);color:#1a1033}button.w{background:var(--card);color:var(--ink)}button.r{background:var(--no)}button.g{background:var(--ok)}
+button.sm{padding:6px 10px;font-size:13px}button.big{width:100%;font-size:17px;padding:13px}button:disabled{opacity:.5}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.gc{padding:8px;display:flex;flex-direction:column;gap:3px;cursor:pointer;box-shadow:3px 3px 0 var(--edge);min-width:0}
+.gc b{font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tile{aspect-ratio:1.5;border-radius:10px;border:2px solid var(--edge);display:flex;align-items:center;justify-content:center;font-size:46px;margin-bottom:4px}
+.dv{font-size:12px;color:var(--mute);display:flex;align-items:center;overflow:hidden;white-space:nowrap}
+.vb{display:inline-flex;flex:none;width:15px;height:15px;border-radius:50%;background:var(--blue);color:#fff;font-size:10px;align-items:center;justify-content:center;margin-left:4px;font-weight:900}
+.tag{font-size:12px;font-weight:800;border:2px solid var(--edge);border-radius:8px;padding:1px 7px}.tag.p{background:var(--yel);color:#1a1033}.tag.o{background:var(--ok);color:#fff}
+.row{display:flex;gap:8px;align-items:center}.row .grow{flex:1;min-width:0}
+.item{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:2px dashed color-mix(in srgb,var(--ink) 20%,transparent)}.item:last-child{border:0}
+.item .ic{font-size:30px}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;gap:6px;background:var(--card);border-top:2px solid var(--edge);padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:5}
+nav button{flex:1;background:transparent;color:var(--mute);border:0;box-shadow:none;font-size:12px;padding:6px 2px}nav button span{display:block;font-size:22px}
+nav button.on{color:var(--pur)}
+.view{display:none}.view.on{display:block}
+#sheet{position:fixed;inset:0;background:rgba(10,5,25,.55);display:none;align-items:flex-end;z-index:10}#sheet.on{display:flex}
+#sheet .in{background:var(--bg);width:100%;border-radius:22px 22px 0 0;border:2px solid var(--edge);border-bottom:0;padding:16px 16px calc(18px + env(safe-area-inset-bottom));max-height:88vh;overflow:auto}
+#player{position:fixed;inset:0;background:#000;display:none;flex-direction:column;z-index:20}#player.on{display:flex}
+#bar{display:flex;align-items:center;gap:10px;padding:calc(8px + env(safe-area-inset-top)) 12px 8px;background:var(--pur);color:#fff;font-weight:800}
+#frame{flex:1;width:100%;border:0;background:#000}
+#toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;z-index:30;display:none;max-width:90vw;font-weight:700}
+code{background:color-mix(in srgb,var(--pur) 15%,transparent);padding:1px 5px;border-radius:5px;font-size:12px;word-break:break-all}
+</style>
+</head>
+<body>
+<div class="logo"><i>Funny</i>Games</div>
+<div class="muted">Бесплатные игры. Добавляй в библиотеку и играй.</div>
+
+<section class="view on" id="v-store"></section>
+<section class="view" id="v-lib"></section>
+<section class="view" id="v-pub"></section>
+<section class="view" id="v-admin"></section>
+
+<div id="sheet"><div class="in" id="sin"></div></div>
+<div id="player"><div id="bar"><button class="y sm" id="pback">← Назад</button><span id="ptitle"></span></div>
+  <iframe id="frame" sandbox="allow-scripts" title="Игра"></iframe></div>
+<div id="toast"></div>
+<nav id="nav"></nav>
+
+<script>
+const tg = window.Telegram && Telegram.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const gid = localStorage.gid || (localStorage.gid = Math.random().toString(36).slice(2) + Date.now().toString(36));
+let gname = localStorage.gname || '';
+if (!tg && !gname) { gname = (prompt('Как тебя зовут?') || 'Гость').slice(0, 24); localStorage.gname = gname; }
+let me = null, tab = 'store', cur = null, botName = '';
+
+async function api(p, b) {
+  const r = await fetch(p, { method: b ? 'POST' : 'GET', body: b ? JSON.stringify(b) : undefined,
+    headers: { 'Content-Type': 'application/json', 'x-init-data': tg ? tg.initData : '', 'x-guest-id': gid, 'x-name': encodeURIComponent(gname) } });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || 'Ошибка сети');
+  return j;
+}
+function toast(t) { const e = $('#toast'); e.textContent = t; e.style.display = 'block'; clearTimeout(toast.t); toast.t = setTimeout(() => e.style.display = 'none', 2800); }
+const run = f => async (...a) => { try { await f(...a); } catch (e) { toast(e.message); } };
+const col = id => { let h = 0; for (const c of id) h = (h * 31 + c.charCodeAt(0)) % 360; return `hsl(${h} 85% 68%)`; };
+const vb = v => v ? '<span class="vb" title="Проверенный разработчик">✓</span>' : '';
+const card = (g, lib) => `<div class="gc" data-g="${esc(g.id)}"><div class="tile" style="background:${col(g.id)}">${esc(g.icon)}</div><b>${esc(g.title)}</b>
+  <span class="dv">${esc(g.dev.name)}${vb(g.dev.verified)}</span>
+  <span class="muted">${lib ? '🏅 Рекорд: ' + g.best : '▶ ' + g.plays + ' · 📚 ' + g.adds}</span>` +
+  (lib ? `<button class="sm y" data-p="${esc(g.id)}">▶ Играть</button>` : '') + '</div>';
+
+/* ---------- навигация ---------- */
+function nav() {
+  const t = [['store', '🛍️', 'Магазин'], ['lib', '📚', 'Библиотека'], ['pub', '➕', 'Выложить']];
+  if (me.admin) t.push(['admin', '🛠️', 'Админ']);
+  $('#nav').innerHTML = t.map(x => `<button data-v="${x[0]}" class="${x[0] === tab ? 'on' : ''}"><span>${x[1]}</span>${x[2]}</button>`).join('');
+  $('#nav').querySelectorAll('button').forEach(b => b.onclick = () => show(b.dataset.v));
+}
+function show(v) {
+  tab = v; nav();
+  document.querySelectorAll('.view').forEach(x => x.classList.toggle('on', x.id === 'v-' + v));
+  return run(async () => ({ store: rStore, lib: rLib, pub: rPub, admin: rAdmin })[v]())();
+}
+function bindCards(root, list) {
+  root.querySelectorAll('.gc').forEach(el => el.onclick = e => {
+    const g = list.find(x => x.id === el.dataset.g);
+    if (e.target.closest('[data-p]')) return play(g); openSheet(g);
+  });
+}
+
+/* ---------- магазин ---------- */
+let sq = '';
+async function rStore() {
+  const l = (await api('/api/games?q=' + encodeURIComponent(sq))).list;
+  if (!$('#sq')) $('#v-store').innerHTML = '<input id="sq" placeholder="🔍 Найти игру" autocomplete="off"><div id="sg"></div>';
+  $('#sq').value = sq;
+  $('#sq').oninput = e => { sq = e.target.value; clearTimeout(rStore.t); rStore.t = setTimeout(run(rStore), 250); };
+  $('#sg').innerHTML = l.length ? '<div class="grid">' + l.map(g => card(g)).join('') + '</div>' : '<div class="box muted">Ничего не найдено</div>';
+  bindCards($('#sg'), l);
+}
+async function rLib() {
+  const l = (await api('/api/library')).list;
+  $('#v-lib').innerHTML = '<h2>Моя библиотека</h2>' + (l.length ? '<div class="grid">' + l.map(g => card(g, true)).join('') + '</div>'
+    : '<div class="box"><b>Пока пусто</b><p class="muted">Открой магазин и добавь первую игру.</p><button class="y" id="go">В магазин</button></div>');
+  bindCards($('#v-lib'), l);
+  if ($('#go')) $('#go').onclick = () => show('store');
+}
+
+/* ---------- карточка игры ---------- */
+function openSheet(g) {
+  const pend = g.status === 'pending', mine = g.t && (g.dev.id === me.id || me.admin);
+  $('#sin').innerHTML = `<div class="tile" style="background:${col(g.id)};aspect-ratio:2.2;font-size:64px">${esc(g.icon)}</div>
+    <h2 style="margin-top:4px">${esc(g.title)} ${pend ? '<span class="tag p">на проверке</span>' : ''}</h2>
+    <div class="dv" style="font-size:14px;margin-bottom:8px">${esc(g.dev.name)}${vb(g.dev.verified)}</div>
+    <p>${esc(g.desc || 'Без описания')}</p><p class="muted">▶ ${g.plays} запусков · 📚 ${g.adds} в библиотеках${g.inLib ? ' · 🏅 рекорд ' + g.best : ''}</p>
+    <div id="sb" class="row" style="flex-wrap:wrap">` +
+    (pend ? '<button class="y grow" data-a="prev">▶ Посмотреть</button>'
+      : g.inLib ? '<button class="y grow" data-a="play">▶ Играть</button><button class="w" data-a="rm">Убрать</button>'
+      : '<button class="grow" data-a="add">＋ В библиотеку</button>') +
+    (mine ? '<button class="r sm" data-a="del">Удалить</button>' : '') + '</div><button class="w big" id="sx" style="margin-top:10px">Закрыть</button>';
+  $('#sheet').classList.add('on');
+  $('#sx').onclick = () => $('#sheet').classList.remove('on');
+  $('#sheet').onclick = e => { if (e.target.id === 'sheet') $('#sheet').classList.remove('on'); };
+  const A = {
+    add: async () => { await api('/api/lib/add', { id: g.id }); g.inLib = true; g.adds++; toast('Добавлено в библиотеку'); openSheet(g); show(tab); },
+    rm: async () => { await api('/api/lib/remove', { id: g.id }); g.inLib = false; g.adds = Math.max(0, g.adds - 1); openSheet(g); show(tab); },
+    play: async () => { $('#sheet').classList.remove('on'); play(g); },
+    prev: async () => { $('#sheet').classList.remove('on'); play(g, true); },
+    del: async () => { if (!confirm('Удалить игру «' + g.title + '»?')) return; await api('/api/game/delete', { id: g.id }); $('#sheet').classList.remove('on'); show(tab); }
+  };
+  $('#sb').querySelectorAll('[data-a]').forEach(b => b.onclick = run(A[b.dataset.a]));
+}
+
+/* ---------- запуск игры ---------- */
+function play(g, preview) {
+  if (!preview) api('/api/played', { id: g.id }).catch(() => {});
+  cur = { g, preview };
+  $('#ptitle').textContent = g.icon + ' ' + g.title;
+  $('#frame').src = '/play/' + encodeURIComponent(g.id) + (preview ? '?t=' + g.t : '');
+  $('#player').classList.add('on');
+}
+$('#pback').onclick = () => { $('#frame').src = 'about:blank'; $('#player').classList.remove('on'); cur = null; show(tab); };
+addEventListener('message', e => {
+  const d = e.data;
+  if (!cur || cur.preview || e.source !== $('#frame').contentWindow || !d || d.fg !== 'score') return;
+  api('/api/score', { id: cur.g.id, score: d.value }).then(r => toast('Счёт ' + Math.floor(d.value) + ' · рекорд ' + r.best)).catch(() => {});
+});
+
+/* ---------- выложить игру ---------- */
+async function rPub() {
+  const mine = (await api('/api/mine')).list;
+  $('#v-pub').innerHTML = `<h2>Выложить игру</h2>
+  <div class="box">${me.admin || me.verified ? '<b>Ты проверенный разработчик ✓</b><p class="muted">Твои игры появляются в магазине сразу.</p>' : '<b>Игра сначала попадёт на проверку</b><p class="muted">Админ посмотрит её и опубликует. Проверенные разработчики публикуют сразу.</p>'}
+    <input id="pt" maxlength="40" placeholder="Название"><input id="pi" maxlength="4" placeholder="Значок-эмодзи, например 🚀">
+    <textarea id="pd" style="min-height:70px;font-family:inherit;font-size:14px" maxlength="300" placeholder="Короткое описание"></textarea>
+    <label class="muted">HTML-файл игры:</label><input type="file" id="pf" accept=".html,.htm,text/html">
+    <textarea id="ph" placeholder="…или вставь HTML-код сюда"></textarea>
+    <button class="big" id="ps">Отправить</button>
+    <p class="muted">Игра — один HTML-файл до 400 КБ. В песочнице нет интернета и localStorage. Чтобы сохранить рекорд игрока: <code>parent.postMessage({fg:'score',value:123},'*')</code></p></div>
+  <h2>Мои игры</h2><div class="box">` + (mine.length ? mine.map(g => `<div class="item"><span class="ic">${esc(g.icon)}</span><div class="grow"><b>${esc(g.title)}</b><br>
+    <span class="tag ${g.status === 'pending' ? 'p' : 'o'}">${g.status === 'pending' ? 'на проверке' : 'опубликована'}</span></div>
+    <button class="sm y" data-o="${esc(g.id)}">Открыть</button></div>`).join('') : '<span class="muted">Ты пока ничего не выложил</span>') + '</div>';
+  $('#pf').onchange = e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader();
+    r.onload = () => { $('#ph').value = r.result; const m = /<title>([^<]*)/i.exec(r.result); if (m && !$('#pt').value) $('#pt').value = m[1].trim().slice(0, 40); }; r.readAsText(f); };
+  $('#ps').onclick = run(async () => {
+    const r = await api('/api/publish', { title: $('#pt').value, icon: $('#pi').value, desc: $('#pd').value, html: $('#ph').value });
+    toast(r.status === 'published' ? 'Игра опубликована!' : 'Отправлено на проверку'); rPub();
+  });
+  document.querySelectorAll('[data-o]').forEach(b => b.onclick = () => openSheet(mine.find(g => g.id === b.dataset.o)));
+}
+
+/* ---------- админ ---------- */
+async function rAdmin() {
+  const p = (await api('/api/admin/pending')).list;
+  $('#v-admin').innerHTML = `<h2>Заявки на публикацию</h2><div class="box">` + (p.length ? p.map(g => `<div class="item"><span class="ic">${esc(g.icon)}</span>
+    <div class="grow"><b>${esc(g.title)}</b><br><span class="muted">${esc(g.dev.name)}</span></div>
+    <button class="sm y" data-v="${esc(g.id)}">Смотреть</button><button class="sm g" data-ok="${esc(g.id)}">✓</button><button class="sm r" data-no="${esc(g.id)}">✕</button></div>`).join('') : '<span class="muted">Заявок нет</span>') + `</div>
+    <h2>Проверенные разработчики</h2><div class="box"><input id="uq" placeholder="🔍 Имя или ID пользователя"><div id="ul"></div></div>`;
+  p.forEach(g => {
+    document.querySelector(`[data-v="${g.id}"]`).onclick = () => openSheet(g);
+    document.querySelector(`[data-ok="${g.id}"]`).onclick = run(async () => { await api('/api/admin/review', { id: g.id, approve: true }); toast('Опубликовано'); rAdmin(); });
+    document.querySelector(`[data-no="${g.id}"]`).onclick = run(async () => { if (confirm('Отклонить и удалить «' + g.title + '»?')) { await api('/api/admin/review', { id: g.id, approve: false }); rAdmin(); } });
+  });
+  const users = run(async () => {
+    const l = (await api('/api/admin/users?q=' + encodeURIComponent($('#uq').value))).list;
+    $('#ul').innerHTML = l.length ? l.map(u => `<div class="item"><div class="grow"><b>${esc(u.name)}</b>${vb(u.verified)}<br><span class="muted">${esc(u.id)} · игр: ${u.games}</span></div>
+      <button class="sm ${u.verified ? 'w' : 'y'}" data-u="${esc(u.id)}" data-val="${u.verified ? 0 : 1}">${u.verified ? 'Снять ✓' : 'Выдать ✓'}</button></div>`).join('') : '<span class="muted">Никого не найдено</span>';
+    $('#ul').querySelectorAll('[data-u]').forEach(b => b.onclick = run(async () => { await api('/api/admin/verify', { id: b.dataset.u, value: b.dataset.val === '1' }); users(); }));
+  });
+  $('#uq').oninput = () => { clearTimeout(users.t); users.t = setTimeout(users, 250); };
+  users();
+}
+
+(async () => {
+  try {
+    botName = (await api('/api/config')).bot || '';
+    me = (await api('/api/me', {})).me;
+    show('store');
+  } catch (e) { toast(e.message); }
+})();
+</script>
+</body>
+</html>
