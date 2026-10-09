@@ -48,10 +48,19 @@ const OFFICIAL = [
   { id: 'balloon', file: 'game-balloon.html', title: 'Воздушный шар', icon: '🎈', desc: 'Лети вверх, уворачивайся от птиц и собирай звёзды. Веди шар пальцем или стрелками.' },
   { id: 'snake', file: 'game-snake.html', title: 'Змейка', icon: '🐍', desc: 'Классическая змейка: ешь яблоки, расти и не врезайся. Свайпы или стрелки.' }
 ];
+function readGame(file) {
+  const base = file.replace(/^game-/, '');
+  for (const f of [file, base, 'games/' + base, 'public/' + base]) {
+    const full = path.join(__dirname, f);
+    if (fs.existsSync(full)) return fs.readFileSync(full, 'utf8');
+  }
+  return null;
+}
 function seed() {
   state.users.official = Object.assign({ lib: {} }, state.users.official, { id: 'official', name: 'FunnyGames Official', verified: true, official: true });
   for (const o of OFFICIAL) {
-    const html = fs.readFileSync(path.join(__dirname, o.file), 'utf8');
+    const html = readGame(o.file);
+    if (!html) { console.warn('ВНИМАНИЕ: не найден файл ' + o.file + ' — игра «' + o.title + '» пропущена. Загрузи его в корень репозитория.'); continue; }
     const old = state.games[o.id] || {};
     state.games[o.id] = { plays: 0, adds: 0, created: Date.now(), ...old, id: o.id, title: o.title, icon: o.icon, desc: o.desc, dev: 'official', status: 'published', html };
   }
